@@ -1,0 +1,54 @@
+.home-content {
+  nav.columns {
+    display: flex;
+    margin: 20px auto;
+    width: 30%;
+    justify-content: space-around;
+    box-shadow: 0 0 10px -5px black;
+
+    .item-column {
+      
+    }
+  }
+
+  .sheet-browser {
+    width: 50%;
+    margin: 10px auto;
+    box-shadow: 0 0 10px -5px black;
+    overflow: scroll;
+    display: flex;
+
+
+    .item-slider {
+      text-align: center;
+      width: 220px;
+      min-width: 150px;
+      padding: 5px;
+      transition: all .2s linear;
+
+      &.active {
+        background-color: #FF7733;
+        color: white;
+        transition: all .3s linear;
+      }
+    }
+  }
+
+  .select-a-month {
+    h3 {
+      color: #FF7733;
+      text-align: center;
+      margin-top: 60px;
+    }
+
+    p {
+      text-align: center;
+    }
+
+    img {
+      width: 50%;
+      display: block;
+      margin: 0 auto;
+    }
+  }
+}

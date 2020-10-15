@@ -1,0 +1,33 @@
+header {
+  background-color: #f8f9fa ;
+
+  h1 {
+    color: #FF7733;
+    line-height: .9em;
+
+    span {
+      color: #59c9a5;
+      margin-left:20px;
+    }
+  }
+
+  nav.navbar {
+    width: 80%;
+    margin: 0 auto;
+
+    div.navbar-collapse {
+      justify-content: flex-end;
+    }
+
+    .items {
+      display: flex;
+
+      .nav-link {
+        text-align: center;
+        color: inherit;
+      }
+    }
+  }
+
+  
+}

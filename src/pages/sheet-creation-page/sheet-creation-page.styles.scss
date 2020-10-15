@@ -1,0 +1,38 @@
+.sheet-creation-page {
+  text-align: left;
+  padding-top: 50px;
+
+  h2 {
+    color: #FF7733;
+    margin-top: 30px;
+    text-transform: uppercase;
+  }
+
+  h3 {
+    color: #FF7733;
+    margin: 50px 0 20px;
+  }
+
+  .subtitle {
+    font-style: italic;
+  }
+
+  .result {
+    padding-top: 30px;
+
+    p{
+      color: #be0000;
+    }
+  }
+
+  .col-img {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    img.create-tracker {
+      width: 80%;
+    }
+  }
+  
+}

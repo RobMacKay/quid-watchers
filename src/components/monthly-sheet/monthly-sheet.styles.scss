@@ -1,0 +1,30 @@
+.content-sheets {
+  h2 {
+    color: #FF7733;
+    margin-top: 30px;
+  }
+
+  .chart-part {
+    position: relative;
+    top: -90px;
+    
+    svg {
+      width: 130%;
+      height: 100%;
+    }
+
+    .legend {
+
+      .legend-item {
+        display: flex;
+        margin-bottom: 5px;
+
+        .small-square {
+          width: 20px;
+          height: 20px;
+          margin-right: 10px;
+        }
+      }
+    }
+  }
+}
