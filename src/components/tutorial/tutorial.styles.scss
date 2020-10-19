@@ -341,3 +341,29 @@
       }
     }
   }
+
+  .app {
+    font-family: 'Open Sans', sans-serif;
+    background-color: #fafafa;
+  }
+  
+  body {
+    min-height: 100vh;
+    background-color: #fafafa !important;
+  }
+  
+  .d-none {
+    display: none;
+  }
+  
+  .d-block {
+    display: block;
+  }
+  
+  .app img {
+    max-width: 100%;
+  }
+  
+  h2 {
+    
+  }

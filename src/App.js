@@ -12,7 +12,6 @@ import Footer from './components/footer/footer.component';
 import NewSheet from './pages/new-sheet/new-sheet.component';
 import ResourcesPage from './pages/resources-page/resources-page.component';
 
-import './app.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 function App() {
