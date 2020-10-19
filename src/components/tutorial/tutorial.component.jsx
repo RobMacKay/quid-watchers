@@ -158,8 +158,9 @@ const Tutorial = () => {
     <div className="tutorial">
       <Container>
         <div className="steps">
-          <p className="one active">Step 1</p>
-          <p className="two">Step 2</p>
+          <p className={`one ${currentStep >= 1 ? 'active' : ''}`}>Step 1</p>
+          <p className={`two ${currentStep >= 2 ? 'active' : ''}`}>Step 2</p>
+          <p className={`two ${currentStep >= 3 ? 'active' : ''}`}>Step 3</p>
         </div>
         <Row>
           <Col xs={12} md={6} className={`step-1 ${currentStep === 1 ? '' : 'd-none'}`}>
@@ -189,7 +190,7 @@ const Tutorial = () => {
                 {
                   _.times(nbDebtsAndSavings.nbDebts, (i) => {
                     return(
-                      <tr>
+                      <tr key={`debt-${i}`}>
                         <td className="left-col">Debt {i+1}</td>
                         <td className="right-col"><ClassicInput type="text" data-type="debts" name={`debt-${i+1}`} id={`debt-${i+1}`}  onChange={handleChangeInformation} value={accountInformation.debts[`debt-${i+1}`] ? accountInformation.debts[`debt-${i+1}`] : ''} key={i} /></td>
                       </tr>
@@ -206,7 +207,7 @@ const Tutorial = () => {
                 {
                   _.times(nbDebtsAndSavings.nbSavings, (i) => {
                     return(
-                      <tr>
+                      <tr key={`saving-${i}`}>
                         <td className="left-col">Savings {i+1}</td>
                         <td className="right-col"><ClassicInput type="text" data-type="savings" name={`saving-${i+1}`} id={`saving-${i+1}`}  onChange={handleChangeInformation} value={accountInformation.savings[`saving-${i+1}`] ? accountInformation.savings[`saving-${i+1}`] : ''} key={i} /></td>
                       </tr>
@@ -232,7 +233,7 @@ const Tutorial = () => {
                 {
                   _.times(nbDebtsAndSavings.nbCategories, (i) => {
                     return(
-                      <tr className="item-category">
+                      <tr className="item-category" key={`category-${i}`}>
                         <td className="left-col">
                           <ClassicInput 
                             type="text" 

@@ -14,9 +14,6 @@ const Header = () => {
         <h1 className="site-title"><Link to={`/${id}`}>Quid <br /> <span>Watchers</span></Link></h1>
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
         {
-          console.log(id)
-        }
-        {
           id !== undefined ?
           <Navbar.Collapse id="responsive-navbar-nav">
             <div className="items">
