@@ -62,11 +62,8 @@ export const createNewMonthlySheet = async (userId, accountInformation) => {
   if(!accountInformation) return false;
 
   const dateSheet = new Date();
-  const monthAndYear = accountInformation.month === '' ? dateSheet.toLocaleString('default', { month: 'long', year: 'numeric' }) : accountInformation.month;
-
+  const monthAndYear = accountInformation.month === undefined ? dateSheet.toLocaleString('default', { month: 'long', year: 'numeric' }) : accountInformation.month;
   const monthlyDocument = await firestore.collection('budgetTrackers').doc(userId).collection('monthlySheets').doc(monthAndYear).get();
-
-  console.log(monthAndYear)
 
   if(monthlyDocument.exists) {
     return monthlyDocument.data();
