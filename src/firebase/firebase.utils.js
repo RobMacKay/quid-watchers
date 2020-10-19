@@ -43,23 +43,37 @@ export const setHasTutoed = async (userId) => {
     console.error(error);
     return false;
   }
-  
+}
+
+export const getUser = async (userId) => {
+  if(!userId) return false;
+
+  try {
+    const userDoc = await firestore.collection('budgetTrackers').doc(userId).get();
+
+    return userDoc.data();
+  } catch (error) {
+    console.error(error);
+    return false;
+  }
 }
 
 export const createNewMonthlySheet = async (userId, accountInformation) => {
   if(!accountInformation) return false;
 
   const dateSheet = new Date();
-  const currentMonthAndYear = dateSheet.toLocaleString('default', { month: 'long', year: 'numeric' });
+  const monthAndYear = accountInformation.month === '' ? dateSheet.toLocaleString('default', { month: 'long', year: 'numeric' }) : accountInformation.month;
 
-  const monthlyDocument = await firestore.collection('budgetTrackers').doc(userId).collection('monthlySheets').doc(currentMonthAndYear).get();
+  const monthlyDocument = await firestore.collection('budgetTrackers').doc(userId).collection('monthlySheets').doc(monthAndYear).get();
+
+  console.log(monthAndYear)
 
   if(monthlyDocument.exists) {
     return monthlyDocument.data();
   }
 
   try {
-    await firestore.collection('budgetTrackers').doc(userId).collection('monthlySheets').doc(currentMonthAndYear).set({
+    await firestore.collection('budgetTrackers').doc(userId).collection('monthlySheets').doc(monthAndYear).set({
       accountInformation
     })
 

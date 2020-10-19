@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useCallback} from 'react';
 import { useParams } from 'react-router-dom';
 
 import './home-content.styles.scss';
@@ -17,10 +17,10 @@ const HomeContent = () => {
   const [sheetIds, setSheetIds] = useState([]);
   const [monthlySheet, setMonthlySheet] = useState([]);
 
-  const feedMonthlySheets = async () => {
+  const feedMonthlySheets = useCallback(async () => {
     const allMonthlySheets = await getAllMonthlySheets(id);
     setSheetIds(allMonthlySheets);
-  }
+  }, [id])
 
   const handleSelectMonth = async (event) => {
     const target = event.target;
@@ -39,7 +39,7 @@ const HomeContent = () => {
 
   useEffect(() => {
     feedMonthlySheets()
-  }, []);
+  }, [feedMonthlySheets]);
 
   return (
     <div className="home-content">
@@ -49,7 +49,11 @@ const HomeContent = () => {
             sheetIds ? 
             sheetIds.map(id => {
               return(
-                <div className="item-slider" onClick={handleSelectMonth} data-id={id} key={id}>{id}</div>
+                <div className="item-slider" onClick={handleSelectMonth} data-id={id} key={id}>
+                  {
+                    id.toString()
+                  }
+                </div>
               )
             })
             : 'No sheets to fetch'

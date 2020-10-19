@@ -1,0 +1,23 @@
+.home-page {
+
+  .spinner {
+    margin-top: 20px;
+    --size: 120px;
+    --border: 8px;
+    width: var(--size);
+    height: var(--size);
+    border-radius: 50%;
+    position: relative;
+    border: var(--border) solid lighten(#202020, 5%);
+    border-right: var(--border) solid var(--orange);
+    animation: spin 1s linear infinite;
+    display: block;
+    margin: 20px auto 0;
+  }
+  
+  @keyframes spin {
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+}

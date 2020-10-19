@@ -1,24 +1,25 @@
 import React, { useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import _ from 'lodash';
-
-import './tutorial.styles.scss';
 
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 
-import ClassicInput from '../classic-input/classic-input.component';
-import ClassicButton from '../classic-button/classic-button.component';
+import ClassicInput from '../../components/classic-input/classic-input.component';
+import ClassicButton from '../../components/classic-button/classic-button.component';
 
-import McGregorShowOff from '../../assets/mcgregor.svg';
+import './new-sheet.styles.scss';
 
-import { setHasTutoed, createNewMonthlySheet } from '../../firebase/firebase.utils';
+import { createNewMonthlySheet } from '../../firebase/firebase.utils';
 
-const Tutorial = () => {
+const NewSheet = () => {
   const { id } = useParams();
 
+  const [cantAddSheet, setCantAddSheet] = useState('');
+
   const [accountInformation, setAccountInformation] = useState({
+    month: '',
     netIncome: '',
     overspentLastMonth: '',
     netMinusOverspent: '',
@@ -32,7 +33,6 @@ const Tutorial = () => {
     nbSavings: 3,
     nbCategories: 3
   })
-  const [currentStep, setCurrentStep] = useState(1);
 
   const findTotal = () => {
     const inputs = document.getElementsByName('categories-amount');
@@ -53,6 +53,14 @@ const Tutorial = () => {
       setAccountInformation({
         ...accountInformation,
         [name]: value,
+      })
+    } else if (name === "month") {
+      const newDate = new Date(value);
+      const formattedDate = new Intl.DateTimeFormat('en-US', {month: 'long'}).format(newDate);
+
+      setAccountInformation({
+        ...accountInformation,
+        [name]: formattedDate + ` ${newDate.getFullYear()}`,
       })
     } else {
       const dataType = event.target.dataset.type;
@@ -109,7 +117,6 @@ const Tutorial = () => {
     let categoriesObject = {};
 
     categories.forEach(category => {
-      // console.log(category);
       let categoryName = '';
 
       category.childNodes.forEach(child => {
@@ -129,9 +136,7 @@ const Tutorial = () => {
     return categoriesObject;
   };
 
-  const handleFinishTutorial = async () => {
-    await setHasTutoed(id);
-
+  const handleAddSheet = async () => {
     const categories = await buildTheCategories();
 
     const infoToPassOn = {
@@ -139,34 +144,32 @@ const Tutorial = () => {
       categories: categories
     }
 
-    createNewMonthlySheet(id, infoToPassOn);    
-  }
+    const resultCreation = await createNewMonthlySheet(id, infoToPassOn);    
 
-  const nextStep = () => {
-    setCurrentStep(currentStep + 1);
-  }
-
-  const previousStep = () => {
-    setCurrentStep(currentStep - 1);
+    if(resultCreation.length !== 0) {
+      setCantAddSheet('A sheet has already been created for this month');
+    } if(resultCreation === false) {
+      setCantAddSheet('There was an error creating the sheet, contact The Admin. Also make sure all the fields are properly filled');
+    } if(resultCreation === true) {
+      setCantAddSheet('Sheet successfully created, you can go back to your monthly sheets :)');
+    }
   }
 
   const total = accountInformation.netIncome - accountInformation.overspentLastMonth - accountInformation.totalDistributed
 
-  // Quick thing : there could have been a few components created here to avoid code repetition, but I'm not sure it'd have been really THAT necessary, so I didn't
-
   return (
-    <div className="tutorial">
+    <div className="new-sheet">
       <Container>
-        <div className="steps">
-          <p className="one active">Step 1</p>
-          <p className="two">Step 2</p>
-        </div>
         <Row>
-          <Col xs={12} md={6} className={`step-1 ${currentStep === 1 ? '' : 'd-none'}`}>
+          <Col xs={12} md={6}>
             <h2>Type in your information</h2>
             <p>That will help you have an overview of what resources you'll have this month</p>
             <table className="table-tutorial overview">
               <tbody>
+                <tr>
+                  <th className="left-col">Month</th>
+                  <th className="right-col"><ClassicInput type="month" name="month" id="month" onChange={handleChangeInformation} value={accountInformation.month} min="1900-01" max="2030-12" /></th>
+                </tr>
                 <tr>
                   <th className="left-col">Net Income</th>
                   <th className="right-col"><ClassicInput type="text" name="netIncome" id="netIncome" onChange={handleChangeInformation} value={accountInformation.netIncome} /></th>
@@ -215,9 +218,8 @@ const Tutorial = () => {
                 }
               </tbody>
             </table>
-            <ClassicButton onClick={nextStep} className="classic-button next-button">Next</ClassicButton>
           </Col>
-          <Col xs={12} md={6} className={`step-2 ${currentStep === 2 ? '' : 'd-none'}`}>
+          <Col xs={12} md={6}>
             <h2>Distribute your money</h2>
             <p>To remember where you're supposed to spend your money</p>
             <table className="table-tutorial distribute">
@@ -258,22 +260,13 @@ const Tutorial = () => {
                 }
               </tbody>
             </table>
-            <div className="button-group">
-              <ClassicButton onClick={previousStep} className="classic-button previous-button">Previous</ClassicButton>
-              <ClassicButton onClick={nextStep} className="classic-button next-button">Next</ClassicButton>
-            </div>
-          </Col>
-          <Col xs={12} md={6} className={`step-3 ${currentStep === 3 ? '' : 'd-none'}`}>
-            <h2>You're all set !</h2>
-            <p>Click on the "Finish !" button, keep this URL, and create new monthly sheets at the beginning of every month !</p>
-            
-            <div className="button-group">
-              <ClassicButton onClick={previousStep} className="classic-button previous-button">Previous</ClassicButton>
-              <ClassicButton onClick={handleFinishTutorial} className="classic-button finish-button">Finish !</ClassicButton>
-            </div>
-          </Col>
-          <Col xs={12} md={6}>
-            <img src={McGregorShowOff} alt="Learn how to budget" className="mcgregor" />
+
+            <ClassicButton onClick={handleAddSheet}>Add sheet</ClassicButton>
+            {
+              cantAddSheet ?
+              <p>{cantAddSheet} <br /> <Link to={`/${id}`}>Go back to your sheets</Link></p>
+              : ''
+            }
           </Col>
         </Row>
       </Container>
@@ -281,4 +274,4 @@ const Tutorial = () => {
   )
 };
 
-export default Tutorial;
+export default NewSheet;

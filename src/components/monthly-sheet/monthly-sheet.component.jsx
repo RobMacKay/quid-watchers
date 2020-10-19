@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react';
 
 import {
-  PieChart, Pie, Cell, Sector
+  PieChart, Pie, Cell
 } from 'recharts';
 
 import Row from 'react-bootstrap/Row';
@@ -14,7 +14,6 @@ import './monthly-sheet.styles.scss';
 const MonthlySheet = ({ monthlySheetData }) => {
   const [categoriesData, setCategoriesData] = useState([]);
 
-  const RADIAN = Math.PI / 180;
   const COLORS = ['#23CE6B', '#272D2D', '#A846A0', '#FF8042', '#FFD166', '#118AB2', '#EF476F'];
 
   useEffect(() => {
@@ -28,26 +27,11 @@ const MonthlySheet = ({ monthlySheetData }) => {
     })
 
     setCategoriesData(categoriesArray);
-  }, [])
 
-  const renderCustomizedLabel = ({cx, cy, midAngle, innerRadius, outerRadius, percent, index,}) => {
-    const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
-    const x = cx + radius * Math.cos(-midAngle * RADIAN);
-    const y = cy + radius * Math.sin(-midAngle * RADIAN);
-  
-    return (
-      <text x={x} y={y} fill="white" textAnchor={x > cx ? 'start' : 'end'} dominantBaseline="central">
-
-        {`${(percent * 100).toFixed(0)}%`}
-      </text>
-    );
-  };  
+  }, [monthlySheetData])
 
   return(
     <div className="content-sheets">
-      {
-        // console.log(monthlySheetData)
-      }
       <div className="sheet-data">
         <Row>
           <Col xs={12} md={6}>
@@ -56,15 +40,15 @@ const MonthlySheet = ({ monthlySheetData }) => {
               <tbody>
                 <tr>
                   <th className="left-col">Net Income</th>
-                  <th className="right-col"><ClassicInput type="text" name="netIncome" id="netIncome" value={monthlySheetData.netIncome} readOnly /></th>
+                  <th className="right-col"><ClassicInput type="text" name="netIncome" id="netIncome" value={monthlySheetData.netIncome} /></th>
                 </tr>
                 <tr>
                   <td className="left-col">Overspent last month</td>
-                  <td className="right-col"><ClassicInput type="text" name="overspentLastMonth" id="overspentLastMonth" value={monthlySheetData.overspentLastMonth} readOnly /></td>
+                  <td className="right-col"><ClassicInput type="text" name="overspentLastMonth" id="overspentLastMonth" value={monthlySheetData.overspentLastMonth}  /></td>
                 </tr>
                 <tr>
                   <td className="left-col">Net Income minus overspent</td>
-                  <td className="right-col"><ClassicInput type="text" name="netMinusOverspent" id="netMinusOverspent" value={monthlySheetData.netIncome - monthlySheetData.overspentLastMonth} readOnly /></td>
+                  <td className="right-col"><ClassicInput type="text" name="netMinusOverspent" id="netMinusOverspent" value={monthlySheetData.netIncome - monthlySheetData.overspentLastMonth}  /></td>
                 </tr>
                 <tr className="separator">
                   <td className="left-col title">DEBTS</td>
@@ -135,26 +119,20 @@ const MonthlySheet = ({ monthlySheetData }) => {
                 <tbody>
                   <tr className="separator">
                   <td className="left-col title">BUDGET CATEGORIES</td>
-                    <td className="right-col">
-                    </td>
+                  <td className="right-col">
+                  </td>
                   </tr>
                   {
-                    console.log(monthlySheetData.categories)
-                  }
-                  {
                     Object.entries(monthlySheetData.categories).map(category => {
-                      // categoriesArray = [...categoriesArray, {
-                      //   name: category[0],
-                      //   value: parseInt(category[1]),
-                      // }]
                       return (
-                        <tr className="item-category">
+                        <tr className="item-category" key={`${category[0]}-${category[1]}`}>
                           <td className="left-col">
                             <ClassicInput 
                               type="text" 
                               placeholder="Name" 
                               name={`categories-name`} 
-                              value={category[0]} />
+                              value={category[0]}
+                              readOnly />
                           </td>
                           <td className="right-col">
                             <ClassicInput 
@@ -162,13 +140,14 @@ const MonthlySheet = ({ monthlySheetData }) => {
                               placeholder="Amount" 
                               data-type="categories-amount"
                               name="categories-amount" 
-                              value={category[1]} />
+                              value={category[1]}
+                              readOnly />
                             </td>
                         </tr>
                       )
                     })
                   }
-                  </tbody>
+                </tbody>
               </table>
             </div>
           </Col>
