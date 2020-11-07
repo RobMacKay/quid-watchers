@@ -266,7 +266,7 @@ const Tutorial = () => {
           </Col>
           <Col xs={12} md={6} className={`step-3 ${currentStep === 3 ? '' : 'd-none'}`}>
             <h2>You're all set !</h2>
-            <p>Click on the "Finish !" button, keep this URL, and create new monthly sheets at the beginning of every month !</p>
+            <p>Click on the "Finish !" button, keep this URL, refresh the page and create new monthly sheets at the beginning of every month !</p>
             
             <div className="button-group">
               <ClassicButton onClick={previousStep} className="classic-button previous-button">Previous</ClassicButton>
