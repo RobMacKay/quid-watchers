@@ -14,7 +14,7 @@
 
 ### How to use ?
 
-- Go to https://fitlog-aef73.firebaseapp.com/
+- Go to https://quid-watchers-4eslcitp1.vercel.app/
 - Type in the name you want for your budget tracker
 - Bookmark the link that is given to you ( super important, unless you want to spend your whole time going to your browser history )
 - ???
