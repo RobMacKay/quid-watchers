@@ -12,7 +12,7 @@ import './sheet-creation-page.styles.scss';
 
 import SheetCreationImage from '../../assets/bar_chart.svg';
 
-import {createNewBudgetTracker} from '../../firebase/firebase.utils.js';
+import { createNewBudgetTracker } from '../../firebase/firebase.utils.js';
 
 const SheetCreationPage = () => {
   const [id, setId] = useState('');
@@ -22,7 +22,7 @@ const SheetCreationPage = () => {
     const newId = await createNewBudgetTracker(title);
 
     setId(newId);
-  }
+  };
 
   return (
     <div className="sheet-creation-page">
@@ -32,25 +32,34 @@ const SheetCreationPage = () => {
             <h2>Create your budget tracker</h2>
             <p className="subtitle">And track your spending better</p>
             <h3>First, type your name</h3>
-            <ClassicInput type="text" onChange={(event) => setTitle(event.target.value)} />
+            <ClassicInput
+              type="text"
+              onChange={(event) => setTitle(event.target.value)}
+            />
             <h3>Then, click here</h3>
-            <ClassicButton onClick={() => createBudgetTracker(title)}>Create</ClassicButton>
-            {
-              id ? 
+            <ClassicButton onClick={() => createBudgetTracker(title)}>
+              Create
+            </ClassicButton>
+            {id ? (
               <div className="result">
                 <Link to={`/${id}`}>Here's your link</Link>
                 <p>Don't forget to bookmark it !</p>
               </div>
-              : ''
-            }
+            ) : (
+              ''
+            )}
           </Col>
           <Col xs={12} md={7} className="col-img">
-            <img src={SheetCreationImage} alt="Get help with your budget" className="create-tracker" />
+            <img
+              src={SheetCreationImage}
+              alt="Get help with your budget"
+              className="create-tracker"
+            />
           </Col>
         </Row>
       </Container>
     </div>
-  )
-}
+  );
+};
 
 export default SheetCreationPage;

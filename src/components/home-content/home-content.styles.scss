@@ -7,7 +7,6 @@
     box-shadow: 0 0 10px -5px black;
 
     .item-column {
-      
     }
   }
 
@@ -21,25 +20,24 @@
     overflow: scroll;
     display: flex;
 
-
     .item-slider {
       text-align: center;
       width: 220px;
       min-width: 150px;
       padding: 5px;
-      transition: all .2s linear;
+      transition: all 0.2s linear;
 
       &.active {
-        background-color: #FF7733;
+        background-color: #ff7733;
         color: white;
-        transition: all .3s linear;
+        transition: all 0.3s linear;
       }
     }
   }
 
   .select-a-month {
     h3 {
-      color: #FF7733;
+      color: #ff7733;
       text-align: center;
       margin-top: 60px;
     }

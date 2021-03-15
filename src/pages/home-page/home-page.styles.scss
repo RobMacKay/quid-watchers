@@ -1,5 +1,4 @@
 .home-page {
-
   .spinner {
     margin-top: 20px;
     --size: 120px;
@@ -14,7 +13,7 @@
     display: block;
     margin: 20px auto 0;
   }
-  
+
   @keyframes spin {
     100% {
       transform: rotate(360deg);

@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useCallback} from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
 
 import './home-page.styles.scss';
@@ -6,7 +6,7 @@ import './home-page.styles.scss';
 import HomeContent from '../../components/home-content/home-content.component';
 import Tutorial from '../../components/tutorial/tutorial.component';
 
-import {getUser} from '../../firebase/firebase.utils';
+import { getUser } from '../../firebase/firebase.utils';
 
 const HomePage = () => {
   let { id } = useParams();
@@ -16,26 +16,23 @@ const HomePage = () => {
     const user = await getUser(id);
 
     setHasAlreadyTutoed(user.hasAlreadyTutoed);
-  }, [id])
+  }, [id]);
 
   useEffect(() => {
     fetchUser();
-  }, [fetchUser])
+  }, [fetchUser]);
 
-  return(
+  return (
     <div className="home-page">
-      {
-        hasAlreadyTutoed === '' ?
+      {hasAlreadyTutoed === '' ? (
         <div className="spinner"></div>
-        : (
-        hasAlreadyTutoed ? 
+      ) : hasAlreadyTutoed ? (
         <HomeContent />
-        : 
+      ) : (
         <Tutorial />
-        )
-      }
+      )}
     </div>
-  )
-}
+  );
+};
 
 export default HomePage;
