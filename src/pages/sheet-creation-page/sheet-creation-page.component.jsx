@@ -12,7 +12,7 @@ import './sheet-creation-page.styles.scss';
 
 import SheetCreationImage from '../../assets/bar_chart.svg';
 
-import { createNewBudgetTracker } from '../../firebase/firebase.utils.js';
+import { createNewBudgetTracker } from '../../api/monthly-sheet.api';
 
 const SheetCreationPage = () => {
   const [id, setId] = useState('');

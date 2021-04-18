@@ -6,7 +6,7 @@ import './home-page.styles.scss';
 import HomeContent from '../../components/home-content/home-content.component';
 import Tutorial from '../../components/tutorial/tutorial.component';
 
-import { getUser } from '../../firebase/firebase.utils';
+import { getUser } from '../../api/monthly-sheet.api';
 
 const HomePage = () => {
   let { id } = useParams();

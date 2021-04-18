@@ -13,10 +13,9 @@ import ClassicButton from '../classic-button/classic-button.component';
 
 import McGregorShowOff from '../../assets/mcgregor.svg';
 
-import {
-  setHasTutoed,
-  createNewMonthlySheet,
-} from '../../firebase/firebase.utils';
+import { createNewMonthlySheet } from '../../firebase/firebase.utils';
+
+import { setHasTutoed } from '../../api/monthly-sheet.api';
 
 const Tutorial = () => {
   const { id } = useParams();
