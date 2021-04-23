@@ -9,6 +9,7 @@ import NewSheet from './pages/new-sheet/new-sheet.component';
 import ResourcesPage from './pages/resources-page/resources-page.component';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
+import DataUse from './pages/data-use-page/data-use-page.component';
 
 function App() {
   return (
@@ -32,6 +33,9 @@ function App() {
           </Route>
           <Route exact path="/:id/resources">
             <ResourcesPage />
+          </Route>
+          <Route exact path="/:id/data">
+            <DataUse />
           </Route>
         </Switch>
         <Footer />
