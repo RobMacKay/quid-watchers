@@ -139,14 +139,68 @@ const Tutorial = () => {
     return categoriesObject;
   };
 
+  const buildTheDebts = async () => {
+    const debts = document.querySelectorAll('.item-debt');
+
+    let debtsObject = {};
+
+    debts.forEach((debt) => {
+      let debtName = '';
+
+      debt.childNodes.forEach((child) => {
+        const superChild = child.childNodes[0].childNodes[0];
+
+        if (superChild.getAttribute('name') === 'debts-name') {
+          debtName = superChild.value;
+        } else if (superChild.getAttribute('name') === 'debts-amount') {
+          debtsObject = {
+            ...debtsObject,
+            [debtName]: superChild.value,
+          };
+        }
+      });
+    });
+
+    return debtsObject;
+  };
+
+  const buildTheSavings = async () => {
+    const savings = document.querySelectorAll('.item-saving');
+
+    let savingsObject = {};
+
+    savings.forEach((saving) => {
+      let savingName = '';
+
+      saving.childNodes.forEach((child) => {
+        const superChild = child.childNodes[0].childNodes[0];
+
+        if (superChild.getAttribute('name') === 'savings-name') {
+          savingName = superChild.value;
+        } else if (superChild.getAttribute('name') === 'savings-amount') {
+          savingsObject = {
+            ...savingsObject,
+            [savingName]: superChild.value,
+          };
+        }
+      });
+    });
+
+    return savingsObject;
+  };
+
   const handleFinishTutorial = async () => {
     await setHasTutoed(id);
 
     const categories = await buildTheCategories();
+    const debts = await buildTheDebts();
+    const savings = await buildTheSavings();
 
     const infoToPassOn = {
       ...accountInformation,
       categories: categories,
+      debts: debts,
+      savings: savings,
     };
 
     createNewMonthlySheet(id, infoToPassOn);
@@ -248,21 +302,26 @@ const Tutorial = () => {
                 </tr>
                 {_.times(nbDebtsAndSavings.nbDebts, (i) => {
                   return (
-                    <tr key={`debt-${i}`}>
-                      <td className="left-col">Debt {i + 1}</td>
+                    <tr className="item-debt" key={`debt-${i}`}>
+                      <td className="left-col">
+                        <ClassicInput
+                          type="text"
+                          placeholder="Name"
+                          name={`debts-name`}
+                          id={`debts-name-${i + 1}`}
+                          onChange={handleChangeInformation}
+                          key={i + 1}
+                        />
+                      </td>
                       <td className="right-col">
                         <ClassicInput
                           type="text"
-                          data-type="debts"
-                          name={`debt-${i + 1}`}
-                          id={`debt-${i + 1}`}
+                          placeholder="Amount"
+                          data-type="debts-amount"
+                          name="debts-amount"
+                          id={`debts-${i + 1}`}
                           onChange={handleChangeInformation}
-                          value={
-                            accountInformation.debts[`debt-${i + 1}`]
-                              ? accountInformation.debts[`debt-${i + 1}`]
-                              : ''
-                          }
-                          key={i}
+                          key={i + 1}
                         />
                       </td>
                     </tr>
@@ -289,21 +348,26 @@ const Tutorial = () => {
                 </tr>
                 {_.times(nbDebtsAndSavings.nbSavings, (i) => {
                   return (
-                    <tr key={`saving-${i}`}>
-                      <td className="left-col">Savings {i + 1}</td>
+                    <tr className="item-saving" key={`saving-${i}`}>
+                      <td className="left-col">
+                        <ClassicInput
+                          type="text"
+                          placeholder="Name"
+                          name={`savings-name`}
+                          id={`savings-name-${i + 1}`}
+                          onChange={handleChangeInformation}
+                          key={i + 1}
+                        />
+                      </td>
                       <td className="right-col">
                         <ClassicInput
                           type="text"
-                          data-type="savings"
-                          name={`saving-${i + 1}`}
-                          id={`saving-${i + 1}`}
+                          placeholder="Amount"
+                          data-type="savings-amount"
+                          name="savings-amount"
+                          id={`savings-${i + 1}`}
                           onChange={handleChangeInformation}
-                          value={
-                            accountInformation.savings[`saving-${i + 1}`]
-                              ? accountInformation.savings[`saving-${i + 1}`]
-                              : ''
-                          }
-                          key={i}
+                          key={i + 1}
                         />
                       </td>
                     </tr>
