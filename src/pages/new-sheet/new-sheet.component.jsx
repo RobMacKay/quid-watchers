@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
+import { dateFormat } from '../../utilities/dateFormat';
 import _ from 'lodash';
 
 import Container from 'react-bootstrap/Container';
@@ -11,7 +12,7 @@ import ClassicButton from '../../components/classic-button/classic-button.compon
 
 import './new-sheet.styles.scss';
 
-import { createNewMonthlySheet } from '../../firebase/firebase.utils';
+import { createNewMonthlySheet } from '../../api/monthly-sheet.api';
 
 const NewSheet = () => {
   const { id } = useParams();
@@ -34,7 +35,7 @@ const NewSheet = () => {
     nbCategories: 3,
   });
 
-  const findTotal = () => {
+  const findTotalCategories = () => {
     const inputs = document.getElementsByName('categories-amount');
     let tot = 0;
     for (let i = 0; i < inputs.length; i++) {
@@ -59,19 +60,18 @@ const NewSheet = () => {
         [name]: value,
       });
     } else if (name === 'month') {
-      const newDate = new Date(value);
-      const formattedDate = new Intl.DateTimeFormat('en-US', {
-        month: 'long',
-      }).format(newDate);
+      const date = new Date(value);
+
+      const formattedDate = dateFormat(date, 'mmmm yyyy');
 
       setAccountInformation({
         ...accountInformation,
-        [name]: formattedDate + ` ${newDate.getFullYear()}`,
+        [name]: formattedDate,
       });
     } else {
       const dataType = event.target.dataset.type;
 
-      if (dataType === 'debts') {
+      if (dataType === 'debts-amount') {
         setAccountInformation({
           ...accountInformation,
           debts: {
@@ -88,7 +88,7 @@ const NewSheet = () => {
           },
         });
       } else if (dataType === 'categories-amount') {
-        const total = findTotal();
+        const total = findTotalCategories();
 
         setAccountInformation({
           ...accountInformation,
@@ -146,27 +146,81 @@ const NewSheet = () => {
     return categoriesObject;
   };
 
+  const buildTheDebts = async () => {
+    const debts = document.querySelectorAll('.item-debt');
+
+    let debtsObject = {};
+
+    debts.forEach((debt) => {
+      let debtName = '';
+
+      debt.childNodes.forEach((child) => {
+        const superChild = child.childNodes[0].childNodes[0];
+
+        if (superChild.getAttribute('name') === 'debts-name') {
+          debtName = superChild.value;
+        } else if (superChild.getAttribute('name') === 'debts-amount') {
+          debtsObject = {
+            ...debtsObject,
+            [debtName]: superChild.value,
+          };
+        }
+      });
+    });
+
+    return debtsObject;
+  };
+
+  const buildTheSavings = async () => {
+    const savings = document.querySelectorAll('.item-saving');
+
+    let savingsObject = {};
+
+    savings.forEach((saving) => {
+      let savingName = '';
+
+      saving.childNodes.forEach((child) => {
+        const superChild = child.childNodes[0].childNodes[0];
+
+        if (superChild.getAttribute('name') === 'savings-name') {
+          savingName = superChild.value;
+        } else if (superChild.getAttribute('name') === 'savings-amount') {
+          savingsObject = {
+            ...savingsObject,
+            [savingName]: superChild.value,
+          };
+        }
+      });
+    });
+
+    return savingsObject;
+  };
+
   const handleAddSheet = async () => {
     const categories = await buildTheCategories();
+    const debts = await buildTheDebts();
+    const savings = await buildTheSavings();
 
     const infoToPassOn = {
       ...accountInformation,
       categories: categories,
+      debts: debts,
+      savings: savings,
     };
 
     const resultCreation = await createNewMonthlySheet(id, infoToPassOn);
 
-    if (resultCreation.length !== 0) {
-      setCantAddSheet('A sheet has already been created for this month');
-    }
-    if (resultCreation === false) {
+    if (resultCreation.status === 200) {
+      if (resultCreation.data.duplicate) {
+        setCantAddSheet('There is already a budget sheet for this month.');
+      } else {
+        setCantAddSheet(
+          'Sheet successfully created, you can go back to your monthly sheets :)'
+        );
+      }
+    } else {
       setCantAddSheet(
         'There was an error creating the sheet, contact The Admin. Also make sure all the fields are properly filled'
-      );
-    }
-    if (resultCreation === true) {
-      setCantAddSheet(
-        'Sheet successfully created, you can go back to your monthly sheets :)'
       );
     }
   };
@@ -196,7 +250,6 @@ const NewSheet = () => {
                       name="month"
                       id="month"
                       onChange={handleChangeInformation}
-                      value={accountInformation.month}
                       min="1900-01"
                       max="2030-12"
                     />
@@ -262,21 +315,24 @@ const NewSheet = () => {
                 </tr>
                 {_.times(nbDebtsAndSavings.nbDebts, (i) => {
                   return (
-                    <tr>
-                      <td className="left-col">Debt {i + 1}</td>
+                    <tr className="item-debt">
+                      <td className="left-col">
+                        <ClassicInput
+                          type="text"
+                          placeholder="Name"
+                          name={`debts-name`}
+                          id={`debts-name-${i + 1}`}
+                          key={i + 1}
+                        />
+                      </td>
                       <td className="right-col">
                         <ClassicInput
                           type="text"
-                          data-type="debts"
-                          name={`debt-${i + 1}`}
-                          id={`debt-${i + 1}`}
-                          onChange={handleChangeInformation}
-                          value={
-                            accountInformation.debts[`debt-${i + 1}`]
-                              ? accountInformation.debts[`debt-${i + 1}`]
-                              : ''
-                          }
-                          key={i}
+                          placeholder="Amount"
+                          data-type="debts-amount"
+                          name="debts-amount"
+                          id={`debts-${i + 1}`}
+                          key={i + 1}
                         />
                       </td>
                     </tr>
@@ -303,21 +359,24 @@ const NewSheet = () => {
                 </tr>
                 {_.times(nbDebtsAndSavings.nbSavings, (i) => {
                   return (
-                    <tr>
-                      <td className="left-col">Savings {i + 1}</td>
+                    <tr className="item-saving">
+                      <td className="left-col">
+                        <ClassicInput
+                          type="text"
+                          placeholder="Name"
+                          name={`savings-name`}
+                          id={`savings-name-${i + 1}`}
+                          key={i + 1}
+                        />
+                      </td>
                       <td className="right-col">
                         <ClassicInput
                           type="text"
-                          data-type="savings"
-                          name={`saving-${i + 1}`}
-                          id={`saving-${i + 1}`}
-                          onChange={handleChangeInformation}
-                          value={
-                            accountInformation.savings[`saving-${i + 1}`]
-                              ? accountInformation.savings[`saving-${i + 1}`]
-                              : ''
-                          }
-                          key={i}
+                          placeholder="Amount"
+                          data-type="savings-amount"
+                          name="savings-amount"
+                          id={`savings-${i + 1}`}
+                          key={i + 1}
                         />
                       </td>
                     </tr>

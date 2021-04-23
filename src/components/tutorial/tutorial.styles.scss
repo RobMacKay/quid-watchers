@@ -146,16 +146,11 @@
       height: 70px;
     }
 
-    .left-col {
-    }
+    .classic-input {
+      margin: 0;
 
-    .right-col {
-      .classic-input {
-        margin: 0;
-
-        input[type='text'] {
-          width: 100%;
-        }
+      input[type='text'] {
+        width: 80%;
       }
     }
   }

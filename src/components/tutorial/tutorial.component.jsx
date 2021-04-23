@@ -13,7 +13,7 @@ import ClassicButton from '../classic-button/classic-button.component';
 
 import McGregorShowOff from '../../assets/mcgregor.svg';
 
-import { createNewMonthlySheet } from '../../firebase/firebase.utils';
+import { createNewMonthlySheet } from '../../api/monthly-sheet.api';
 
 import { setHasTutoed } from '../../api/monthly-sheet.api';
 

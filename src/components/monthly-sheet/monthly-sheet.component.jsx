@@ -11,6 +11,8 @@ import './monthly-sheet.styles.scss';
 
 const MonthlySheet = ({ monthlySheetData }) => {
   const [categoriesData, setCategoriesData] = useState([]);
+  const [debtsData, setDebtsData] = useState([]);
+  const [savingsData, setSavingsData] = useState([]);
 
   const COLORS = [
     '#23CE6B',
@@ -24,18 +26,50 @@ const MonthlySheet = ({ monthlySheetData }) => {
 
   useEffect(() => {
     let categoriesArray = [];
+    let debtsArray = [];
+    let savingsArray = [];
 
-    Object.entries(monthlySheetData.categories).forEach((category) => {
-      categoriesArray = [
-        ...categoriesArray,
-        {
-          name: category[0],
-          value: parseInt(category[1]),
-        },
-      ];
-    });
+    if (monthlySheetData.categories) {
+      Object.entries(monthlySheetData.categories).forEach((category) => {
+        categoriesArray = [
+          ...categoriesArray,
+          {
+            name: category[0],
+            value: parseInt(category[1]),
+          },
+        ];
+      });
 
-    setCategoriesData(categoriesArray);
+      setCategoriesData(categoriesArray);
+    }
+
+    if (monthlySheetData.debts) {
+      Object.entries(monthlySheetData.debts).forEach((debt) => {
+        debtsArray = [
+          ...debtsArray,
+          {
+            name: debt[0],
+            value: parseInt(debt[1]),
+          },
+        ];
+      });
+
+      setDebtsData(debtsArray);
+    }
+
+    if (monthlySheetData.savings) {
+      Object.entries(monthlySheetData.savings).forEach((saving) => {
+        savingsArray = [
+          ...savingsArray,
+          {
+            name: saving[0],
+            value: parseInt(saving[1]),
+          },
+        ];
+      });
+
+      setSavingsData(savingsArray);
+    }
   }, [monthlySheetData]);
 
   return (
@@ -86,34 +120,68 @@ const MonthlySheet = ({ monthlySheetData }) => {
                   <td className="left-col title">DEBTS</td>
                   <td className="right-col"></td>
                 </tr>
-                {Object.keys(monthlySheetData.debts).map(
-                  (keyName, keyIndex) => {
-                    return (
-                      <tr key={keyIndex}>
-                        <td className="left-col">Debt {keyIndex + 1}</td>
-                        <td className="right-col">
-                          {monthlySheetData.debts[keyName]}
-                        </td>
-                      </tr>
-                    );
-                  }
-                )}
+                {monthlySheetData.debts[0]
+                  ? Object.entries(monthlySheetData.debts[0]).map(
+                      (key, value) => {
+                        return (
+                          <tr className="item-debt" key={`${key}-${value}`}>
+                            <td className="left-col">
+                              <ClassicInput
+                                type="text"
+                                placeholder="Name"
+                                name={`debts-name`}
+                                value={key[0]}
+                                readOnly
+                              />
+                            </td>
+                            <td className="right-col">
+                              <ClassicInput
+                                type="text"
+                                placeholder="Amount"
+                                data-type="debts-amount"
+                                name="debts-amount"
+                                value={key[1]}
+                                readOnly
+                              />
+                            </td>
+                          </tr>
+                        );
+                      }
+                    )
+                  : ''}
                 <tr className="separator">
                   <td className="left-col title">SAVINGS</td>
-                  <td className="right-col"></td>
+                  <td className="right-col" />
                 </tr>
-                {Object.keys(monthlySheetData.savings).map(
-                  (keyName, keyIndex) => {
-                    return (
-                      <tr key={keyIndex}>
-                        <td className="left-col">Saving {keyIndex + 1}</td>
-                        <td className="right-col">
-                          {monthlySheetData.savings[keyName]}
-                        </td>
-                      </tr>
-                    );
-                  }
-                )}
+                {monthlySheetData.savings[0]
+                  ? Object.entries(monthlySheetData.savings[0]).map(
+                      (key, value) => {
+                        return (
+                          <tr className="item-saving" key={`${key}-${value}`}>
+                            <td className="left-col">
+                              <ClassicInput
+                                type="text"
+                                placeholder="Name"
+                                name={`savings-name`}
+                                value={key[0]}
+                                readOnly
+                              />
+                            </td>
+                            <td className="right-col">
+                              <ClassicInput
+                                type="text"
+                                placeholder="Amount"
+                                data-type="savings-amount"
+                                name="savings-amount"
+                                value={key[1]}
+                                readOnly
+                              />
+                            </td>
+                          </tr>
+                        );
+                      }
+                    )
+                  : ''}
               </tbody>
             </table>
           </Col>
@@ -145,7 +213,7 @@ const MonthlySheet = ({ monthlySheetData }) => {
                       <div
                         className="small-square"
                         style={{ backgroundColor: COLORS[index] }}
-                      ></div>
+                      />
                       <span>
                         {categoriesData[index].name} -{' '}
                         {categoriesData[index].value}€
@@ -160,38 +228,40 @@ const MonthlySheet = ({ monthlySheetData }) => {
                 <tbody>
                   <tr className="separator">
                     <td className="left-col title">BUDGET CATEGORIES</td>
-                    <td className="right-col"></td>
+                    <td className="right-col" />
                   </tr>
-                  {Object.entries(monthlySheetData.categories).map(
-                    (category) => {
-                      return (
-                        <tr
-                          className="item-category"
-                          key={`${category[0]}-${category[1]}`}
-                        >
-                          <td className="left-col">
-                            <ClassicInput
-                              type="text"
-                              placeholder="Name"
-                              name={`categories-name`}
-                              value={category[0]}
-                              readOnly
-                            />
-                          </td>
-                          <td className="right-col">
-                            <ClassicInput
-                              type="text"
-                              placeholder="Amount"
-                              data-type="categories-amount"
-                              name="categories-amount"
-                              value={category[1]}
-                              readOnly
-                            />
-                          </td>
-                        </tr>
-                      );
-                    }
-                  )}
+                  {monthlySheetData.categories[0]
+                    ? Object.entries(monthlySheetData.categories[0]).map(
+                        (key, value) => {
+                          return (
+                            <tr
+                              className="item-category"
+                              key={`${key}-${value}`}
+                            >
+                              <td className="left-col">
+                                <ClassicInput
+                                  type="text"
+                                  placeholder="Name"
+                                  name={`categories-name`}
+                                  value={key[0]}
+                                  readOnly
+                                />
+                              </td>
+                              <td className="right-col">
+                                <ClassicInput
+                                  type="text"
+                                  placeholder="Amount"
+                                  data-type="categories-amount"
+                                  name="categories-amount"
+                                  value={key[1]}
+                                  readOnly
+                                />
+                              </td>
+                            </tr>
+                          );
+                        }
+                      )
+                    : ''}
                 </tbody>
               </table>
             </div>

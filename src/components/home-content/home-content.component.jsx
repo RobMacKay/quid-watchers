@@ -5,25 +5,25 @@ import './home-content.styles.scss';
 
 import Container from 'react-bootstrap/Container';
 
+import _ from 'lodash';
+
 import MonthlySheet from '../monthly-sheet/monthly-sheet.component';
 
-import {
-  getAllMonthlySheets,
-  getOneMonthlySheet,
-} from '../../firebase/firebase.utils';
+import { getAllMonthlySheets } from '../../api/monthly-sheet.api';
 
 import WaitingForAJob from '../../assets/waiting.svg';
 
 const HomeContent = () => {
   let { id } = useParams();
 
-  const [sheetIds, setSheetIds] = useState([]);
-  const [monthlySheet, setMonthlySheet] = useState([]);
+  const [allSheets, setAllSheets] = useState([]);
+  const [monthlySheet, setMonthlySheet] = useState({});
 
-  const feedMonthlySheets = useCallback(async () => {
+  const feedMonthlySheets = async () => {
     const allMonthlySheets = await getAllMonthlySheets(id);
-    setSheetIds(allMonthlySheets);
-  }, [id]);
+
+    setAllSheets(allMonthlySheets);
+  };
 
   const handleSelectMonth = async (event) => {
     const target = event.target;
@@ -37,36 +37,42 @@ const HomeContent = () => {
 
     target.classList.add('active');
 
-    const monthlySheetData = await getOneMonthlySheet(id, target.dataset.id);
+    const selectedMonthlySheet = allSheets.find((sheet) => {
+      return sheet.month === target.dataset.id;
+    });
 
-    setMonthlySheet(monthlySheetData);
+    if (selectedMonthlySheet) {
+      setMonthlySheet(selectedMonthlySheet);
+    }
   };
 
   useEffect(() => {
     feedMonthlySheets();
-  }, [feedMonthlySheets]);
+  }, []);
 
   return (
     <div className="home-content">
       <Container>
         <nav className="sheet-browser">
-          {sheetIds
-            ? sheetIds.map((id) => {
+          {allSheets
+            ? allSheets.map((sheet) => {
                 return (
                   <div
                     className="item-slider"
                     onClick={handleSelectMonth}
-                    data-id={id}
-                    key={id}
+                    data-id={sheet.month}
+                    key={sheet['_id']}
                   >
-                    {id.toString()}
+                    {sheet.month}
                   </div>
                 );
               })
             : 'No sheets to fetch'}
         </nav>
-        {Object.keys(monthlySheet).length > 1 ? (
-          <MonthlySheet monthlySheetData={monthlySheet} />
+        {!_.isEmpty(monthlySheet) ? (
+          <>
+            <MonthlySheet monthlySheetData={monthlySheet} />
+          </>
         ) : document.querySelectorAll('.item-slider.active').length === 0 ? (
           <div className="select-a-month">
             <h3>Select a month to see your data</h3>
