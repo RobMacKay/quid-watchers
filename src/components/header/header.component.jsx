@@ -29,6 +29,9 @@ const Header = () => {
               <Link className="nav-link" to={`/${id}/resources`}>
                 Resources
               </Link>
+              <Link className="nav-link" to={`/${id}/data`}>
+                Your Data
+              </Link>
             </div>
           </Navbar.Collapse>
         ) : (

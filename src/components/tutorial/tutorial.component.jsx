@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useHistory } from 'react-router-dom';
 import _ from 'lodash';
 
 import './tutorial.styles.scss';
@@ -16,9 +16,12 @@ import McGregorShowOff from '../../assets/mcgregor.svg';
 import { createNewMonthlySheet } from '../../api/monthly-sheet.api';
 
 import { setHasTutoed } from '../../api/monthly-sheet.api';
+import { Alert } from 'react-bootstrap';
 
 const Tutorial = () => {
   const { id } = useParams();
+  const { history } = useHistory();
+  const [messageAlert, setMessageAlert] = useState({});
 
   const [accountInformation, setAccountInformation] = useState({
     netIncome: '',
@@ -119,7 +122,6 @@ const Tutorial = () => {
     let categoriesObject = {};
 
     categories.forEach((category) => {
-      // console.log(category);
       let categoryName = '';
 
       category.childNodes.forEach((child) => {
@@ -203,7 +205,17 @@ const Tutorial = () => {
       savings: savings,
     };
 
-    createNewMonthlySheet(id, infoToPassOn);
+    const result = createNewMonthlySheet(id, infoToPassOn);
+
+    if (!result) {
+      setMessageAlert({
+        color: 'danger',
+        message:
+          'There was an error when trying to create your monthly sheet, please contact The Admin.',
+      });
+    } else {
+      history.push('monthly-sheets');
+    }
   };
 
   const nextStep = () => {
@@ -219,10 +231,13 @@ const Tutorial = () => {
     accountInformation.overspentLastMonth -
     accountInformation.totalDistributed;
 
-  // Quick thing : there could have been a few components created here to avoid code repetition, but I'm not sure it'd have been really THAT necessary, so I didn't
-
   return (
     <div className="tutorial">
+      {messageAlert ? (
+        <Alert variant={messageAlert.color}>{messageAlert.message}</Alert>
+      ) : (
+        ''
+      )}
       <Container>
         <div className="steps">
           <p className={`one ${currentStep >= 1 ? 'active' : ''}`}>Step 1</p>

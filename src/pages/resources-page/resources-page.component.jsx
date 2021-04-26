@@ -85,7 +85,7 @@ const ResourcesPage = () => {
         <h2>How to contact me ?</h2>
         <p>
           You can send me an email
-          <a href="mailto:mael.landrin@gmail.com">mael.landrin@gmail.com</a>
+          <a href="mailto:mael.landrin@gmail.com"> mael.landrin@gmail.com</a>
         </p>
       </Container>
     </div>

@@ -11,26 +11,35 @@ import './monthly-sheet.styles.scss';
 
 const MonthlySheet = ({ monthlySheetData }) => {
   const [categoriesData, setCategoriesData] = useState([]);
-  const [debtsData, setDebtsData] = useState([]);
-  const [savingsData, setSavingsData] = useState([]);
 
   const COLORS = [
-    '#23CE6B',
-    '#272D2D',
-    '#A846A0',
-    '#FF8042',
-    '#FFD166',
-    '#118AB2',
-    '#EF476F',
+    '#7d87b9',
+    '#bb7784',
+    '#d5eae7',
+    '#f3e1eb',
+    '#8e063b',
+    '#d33f6a',
+    '#11c638',
+    '#ef9708',
+    '#8dd593',
+    '#4a6fe3',
+    '#023fa5',
+    '#f6c4e1',
+    '#9cded6',
+    '#c6dec7',
+    '#d6bcc0',
+    '#bec1d4',
+    '#ead3c6',
+    '#f0b98d',
+    '#0fcfc0',
+    '#f79cd4',
   ];
 
   useEffect(() => {
     let categoriesArray = [];
-    let debtsArray = [];
-    let savingsArray = [];
 
     if (monthlySheetData.categories) {
-      Object.entries(monthlySheetData.categories).forEach((category) => {
+      Object.entries(monthlySheetData.categories[0]).forEach((category) => {
         categoriesArray = [
           ...categoriesArray,
           {
@@ -41,34 +50,6 @@ const MonthlySheet = ({ monthlySheetData }) => {
       });
 
       setCategoriesData(categoriesArray);
-    }
-
-    if (monthlySheetData.debts) {
-      Object.entries(monthlySheetData.debts).forEach((debt) => {
-        debtsArray = [
-          ...debtsArray,
-          {
-            name: debt[0],
-            value: parseInt(debt[1]),
-          },
-        ];
-      });
-
-      setDebtsData(debtsArray);
-    }
-
-    if (monthlySheetData.savings) {
-      Object.entries(monthlySheetData.savings).forEach((saving) => {
-        savingsArray = [
-          ...savingsArray,
-          {
-            name: saving[0],
-            value: parseInt(saving[1]),
-          },
-        ];
-      });
-
-      setSavingsData(savingsArray);
     }
   }, [monthlySheetData]);
 
@@ -198,29 +179,38 @@ const MonthlySheet = ({ monthlySheetData }) => {
                   fill="#8884d8"
                   dataKey="value"
                 >
-                  {categoriesData.map((entry, index) => (
-                    <Cell
-                      key={`cell-${index}`}
-                      fill={COLORS[index % COLORS.length]}
-                    />
-                  ))}
+                  {monthlySheetData.categories[0]
+                    ? Object.entries(monthlySheetData.categories[0]).map(
+                        (currElement, index) => {
+                          return (
+                            <Cell
+                              key={`cell-${index}`}
+                              fill={COLORS[index % COLORS.length]}
+                            />
+                          );
+                        }
+                      )
+                    : ''}
                 </Pie>
               </PieChart>
               <div className="legend">
-                {categoriesData.map((entry, index) => {
-                  return (
-                    <div className="legend-item" key={`legend-${index}`}>
-                      <div
-                        className="small-square"
-                        style={{ backgroundColor: COLORS[index] }}
-                      />
-                      <span>
-                        {categoriesData[index].name} -{' '}
-                        {categoriesData[index].value}€
-                      </span>
-                    </div>
-                  );
-                })}
+                {monthlySheetData.categories[0]
+                  ? Object.entries(monthlySheetData.categories[0]).map(
+                      (currElement, index) => {
+                        return (
+                          <div className="legend-item" key={`legend-${index}`}>
+                            <div
+                              className="small-square"
+                              style={{ backgroundColor: COLORS[index] }}
+                            />
+                            <span>
+                              {currElement[0]} - {currElement[1]}€
+                            </span>
+                          </div>
+                        );
+                      }
+                    )
+                  : ''}
               </div>
             </div>
             <div className="detailed-part">

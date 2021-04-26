@@ -42,8 +42,11 @@ const SheetCreationPage = () => {
             </ClassicButton>
             {id ? (
               <div className="result">
+                <p>
+                  This is the link to access your budget tracker. Don't forget
+                  to bookmark it !
+                </p>
                 <Link to={`/${id}`}>Here's your link</Link>
-                <p>Don't forget to bookmark it !</p>
               </div>
             ) : (
               ''

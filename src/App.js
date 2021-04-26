@@ -15,6 +15,9 @@ function App() {
   return (
     <Router>
       <div className="app">
+        {/*<Route path="/">*/}
+        {/*  <LandingPage />*/}
+        {/*</Route>*/}
         <Route path="/:id">
           <Header />
         </Route>

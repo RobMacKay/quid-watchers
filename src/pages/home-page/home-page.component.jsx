@@ -25,7 +25,7 @@ const HomePage = () => {
   return (
     <div className="home-page">
       {hasAlreadyTutoed === '' ? (
-        <div className="spinner"></div>
+        <div className="spinner" />
       ) : hasAlreadyTutoed ? (
         <HomeContent />
       ) : (

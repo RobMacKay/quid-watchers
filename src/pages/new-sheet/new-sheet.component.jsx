@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useHistory } from 'react-router-dom';
 import { dateFormat } from '../../utilities/dateFormat';
 import _ from 'lodash';
 
@@ -13,9 +13,12 @@ import ClassicButton from '../../components/classic-button/classic-button.compon
 import './new-sheet.styles.scss';
 
 import { createNewMonthlySheet } from '../../api/monthly-sheet.api';
+import { Alert } from 'react-bootstrap';
 
 const NewSheet = () => {
   const { id } = useParams();
+  const { history } = useHistory();
+  const [messageAlert, setMessageAlert] = useState({});
 
   const [cantAddSheet, setCantAddSheet] = useState('');
 
@@ -219,6 +222,11 @@ const NewSheet = () => {
         );
       }
     } else {
+      setMessageAlert({
+        color: 'danger',
+        message:
+          'There was an error creating the sheet, contact The Admin. Also make sure all the fields are properly filled.',
+      });
       setCantAddSheet(
         'There was an error creating the sheet, contact The Admin. Also make sure all the fields are properly filled'
       );
@@ -232,6 +240,17 @@ const NewSheet = () => {
 
   return (
     <div className="new-sheet">
+      {messageAlert.message ? (
+        <Alert
+          variant={messageAlert.color}
+          onClose={() => setMessageAlert({})}
+          dismissible
+        >
+          {messageAlert.message}
+        </Alert>
+      ) : (
+        ''
+      )}
       <Container>
         <Row>
           <Col xs={12} md={6}>
