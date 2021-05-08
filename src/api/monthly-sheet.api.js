@@ -1,9 +1,12 @@
 import axios from 'axios';
 
 export const createNewBudgetTracker = async (title) => {
-  const result = await axios.post(`http://localhost:5000/api/monthly-sheets`, {
-    title: title,
-  });
+  const result = await axios.post(
+    `https://quid-watchers-api-6dz7f.ondigitalocean.app/api/monthly-sheets`,
+    {
+      title: title,
+    }
+  );
 
   if (result.status === 200) {
     return result.data['_id'];
@@ -15,7 +18,7 @@ export const createNewBudgetTracker = async (title) => {
 
 export const getUser = async (userId) => {
   const result = await axios.get(
-    `http://localhost:5000/api/monthly-sheets/${userId}`
+    `https://quid-watchers-api-6dz7f.ondigitalocean.app/api/monthly-sheets/${userId}`
   );
 
   if (result.status === 200) {
@@ -28,7 +31,7 @@ export const getUser = async (userId) => {
 
 export const getAllMonthlySheets = async (userId) => {
   const result = await axios.get(
-    `http://localhost:5000/api/monthly-sheets/${userId}/all-sheets`
+    `https://quid-watchers-api-6dz7f.ondigitalocean.app/api/monthly-sheets/${userId}/all-sheets`
   );
 
   if (result.status === 200) {
@@ -41,7 +44,7 @@ export const getAllMonthlySheets = async (userId) => {
 
 export const setHasTutoed = async (userId) => {
   const result = await axios.put(
-    `http://localhost:5000/api/monthly-sheets/${userId}/set-tutoed`
+    `https://quid-watchers-api-6dz7f.ondigitalocean.app/api/monthly-sheets/${userId}/set-tutoed`
   );
 
   if (result.status === 200) {
@@ -54,7 +57,7 @@ export const setHasTutoed = async (userId) => {
 
 export const addSpending = async (userId, month, category, amount) => {
   const result = await axios.put(
-    `http://localhost:5000/api/monthly-sheets/${userId}/spendings`,
+    `https://quid-watchers-api-6dz7f.ondigitalocean.app/api/monthly-sheets/${userId}/spendings`,
     {
       month: month,
       category: category,
@@ -83,7 +86,7 @@ export const createNewMonthlySheet = async (userId, accountInformation) => {
   } = accountInformation;
 
   const result = await axios.put(
-    `http://localhost:5000/api/monthly-sheets/${userId}/`,
+    `https://quid-watchers-api-6dz7f.ondigitalocean.app/api/monthly-sheets/${userId}/`,
     {
       month,
       categories,
