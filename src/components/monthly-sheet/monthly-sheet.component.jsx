@@ -229,6 +229,57 @@ const MonthlySheet = ({ monthlySheetData, setIsFetching, isFetching }) => {
                   : ''}
               </tbody>
             </table>
+            <Row>
+              <Col xs={12} md={12} className="spendings">
+                <div className="title-div">
+                  <h2>Spendings</h2>
+                  <div className="input-group">
+                    <ClassicInput
+                      handleChange={(e) => handleChangeSpending(e)}
+                      placeholder="Category"
+                      type="select"
+                      id="category"
+                      name="category"
+                      value={spendingData.category}
+                      data={categoriesList ? categoriesList : ''}
+                    />
+                    <ClassicInput
+                      handleChange={(e) => handleChangeSpending(e)}
+                      placeholder="Amount"
+                      type="text"
+                      id="amount"
+                      name="amount"
+                      value={spendingData.amount}
+                    />
+                    <ClassicButton handleClick={handleAddSpending}>
+                      Add
+                    </ClassicButton>
+                  </div>
+                </div>
+                <Row>
+                  <Table striped bordered hover>
+                    <thead>
+                      <tr>
+                        <th>Category</th>
+                        <th>Amount</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {monthlySheetData.spendings
+                        ? monthlySheetData.spendings.map((spending, key) => {
+                            return (
+                              <tr key={key}>
+                                <td>{Object.keys(spending)}</td>
+                                <td>{Object.values(spending)}</td>
+                              </tr>
+                            );
+                          })
+                        : null}
+                    </tbody>
+                  </Table>
+                </Row>
+              </Col>
+            </Row>
           </Col>
           <Col xs={12} md={6}>
             <h2>Detailed budget</h2>
@@ -333,57 +384,6 @@ const MonthlySheet = ({ monthlySheetData, setIsFetching, isFetching }) => {
                 </tbody>
               </table>
             </div>
-          </Col>
-        </Row>
-        <Row>
-          <Col xs={12} md={12} className="spendings">
-            <div className="title-div">
-              <h2>Spendings</h2>
-              <div className="input-group">
-                <ClassicInput
-                  handleChange={(e) => handleChangeSpending(e)}
-                  placeholder="Category"
-                  type="select"
-                  id="category"
-                  name="category"
-                  value={spendingData.category}
-                  data={categoriesList ? categoriesList : ''}
-                />
-                <ClassicInput
-                  handleChange={(e) => handleChangeSpending(e)}
-                  placeholder="Amount"
-                  type="text"
-                  id="amount"
-                  name="amount"
-                  value={spendingData.amount}
-                />
-                <ClassicButton handleClick={handleAddSpending}>
-                  Add
-                </ClassicButton>
-              </div>
-            </div>
-            <Row>
-              <Table striped bordered hover>
-                <thead>
-                  <tr>
-                    <th>Category</th>
-                    <th>Amount</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {monthlySheetData.spendings[0]
-                    ? monthlySheetData.spendings.map((spending, key) => {
-                        return (
-                          <tr key={key}>
-                            <td>{Object.keys(spending)}</td>
-                            <td>{Object.values(spending)}</td>
-                          </tr>
-                        );
-                      })
-                    : null}
-                </tbody>
-              </Table>
-            </Row>
           </Col>
         </Row>
       </div>
