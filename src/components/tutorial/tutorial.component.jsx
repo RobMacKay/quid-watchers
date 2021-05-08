@@ -20,7 +20,7 @@ import { Alert } from 'react-bootstrap';
 
 const Tutorial = () => {
   const { id } = useParams();
-  const { history } = useHistory();
+  let history = useHistory();
   const [messageAlert, setMessageAlert] = useState({});
 
   const [accountInformation, setAccountInformation] = useState({
@@ -214,7 +214,7 @@ const Tutorial = () => {
           'There was an error when trying to create your monthly sheet, please contact The Admin.',
       });
     } else {
-      history.push('monthly-sheets');
+      window.location.reload();
     }
   };
 

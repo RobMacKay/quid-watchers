@@ -1,9 +1,14 @@
 .classic-button {
   padding: 12px 20px;
-  background-color: #59c9a5;
-  border: 1px solid #59c9a5;
+  background-color: #FF7733;
+  border: 1px solid #FF7733;
   border-radius: 4px;
   color: #fff;
   margin: 0 10px;
   cursor: pointer;
+
+  &:hover {
+    background-color: #152c5b;
+    border: 1px solid #152c5b;
+  }
 }

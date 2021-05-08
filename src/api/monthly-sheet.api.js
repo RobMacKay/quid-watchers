@@ -31,8 +31,6 @@ export const getAllMonthlySheets = async (userId) => {
     `http://localhost:5000/api/monthly-sheets/${userId}/all-sheets`
   );
 
-  console.log(result);
-
   if (result.status === 200) {
     return result.data;
   } else {
@@ -44,6 +42,24 @@ export const getAllMonthlySheets = async (userId) => {
 export const setHasTutoed = async (userId) => {
   const result = await axios.put(
     `http://localhost:5000/api/monthly-sheets/${userId}/set-tutoed`
+  );
+
+  if (result.status === 200) {
+    return result.data;
+  } else {
+    console.error(result);
+    return false;
+  }
+};
+
+export const addSpending = async (userId, month, category, amount) => {
+  const result = await axios.put(
+    `http://localhost:5000/api/monthly-sheets/${userId}/spendings`,
+    {
+      month: month,
+      category: category,
+      amount: amount,
+    }
   );
 
   if (result.status === 200) {

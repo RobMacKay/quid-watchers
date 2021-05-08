@@ -8,9 +8,20 @@ import Col from 'react-bootstrap/Col';
 import ClassicInput from '../classic-input/classic-input.component';
 
 import './monthly-sheet.styles.scss';
+import ClassicButton from '../classic-button/classic-button.component';
+import { useParams } from 'react-router-dom';
+import { addSpending } from '../../api/monthly-sheet.api';
+import { Table } from 'react-bootstrap';
 
-const MonthlySheet = ({ monthlySheetData }) => {
+const MonthlySheet = ({ monthlySheetData, setIsFetching, isFetching }) => {
+  let { id } = useParams();
   const [categoriesData, setCategoriesData] = useState([]);
+  const [categoriesList, setCategoriesList] = useState([]);
+  const [spendingTotals, setSpendingTotals] = useState({});
+  const [spendingData, setSpendingData] = useState({
+    category: '',
+    amount: 0,
+  });
 
   const COLORS = [
     '#7d87b9',
@@ -37,21 +48,71 @@ const MonthlySheet = ({ monthlySheetData }) => {
 
   useEffect(() => {
     let categoriesArray = [];
+    setCategoriesList([]);
+    setCategoriesData([]);
 
     if (monthlySheetData.categories) {
       Object.entries(monthlySheetData.categories[0]).forEach((category) => {
-        categoriesArray = [
-          ...categoriesArray,
-          {
-            name: category[0],
-            value: parseInt(category[1]),
-          },
-        ];
+        categoriesArray.push({
+          name: category[0],
+          value: parseInt(category[1]),
+        });
       });
 
+      let categories = [];
+
+      categoriesArray.forEach((category) => {
+        categories.push(category.name);
+      });
+
+      setCategoriesList(categories);
       setCategoriesData(categoriesArray);
     }
-  }, [monthlySheetData]);
+
+    if (monthlySheetData.spendings) {
+      let totalCategories = {};
+      monthlySheetData.spendings.forEach((spending) => {
+        const detailsSpending = Object.entries(spending)[0];
+
+        if (detailsSpending) {
+          if (totalCategories.hasOwnProperty(detailsSpending[0])) {
+            totalCategories[detailsSpending[0]] =
+              parseInt(totalCategories[detailsSpending[0]]) +
+              parseInt(detailsSpending[1]);
+          } else {
+            totalCategories[detailsSpending[0]] = parseInt(detailsSpending[1]);
+          }
+        }
+      });
+
+      setSpendingTotals(totalCategories);
+    }
+  }, [monthlySheetData, spendingData]);
+
+  const handleChangeSpending = (event) => {
+    const { name, value } = event.target;
+
+    setSpendingData({
+      ...spendingData,
+      [name]: value,
+    });
+  };
+
+  const handleAddSpending = async () => {
+    setIsFetching(true);
+    await addSpending(
+      id,
+      monthlySheetData.month,
+      spendingData.category,
+      spendingData.amount
+    );
+
+    setSpendingData({
+      ...spendingData,
+      amount: 0,
+    });
+    setIsFetching(false);
+  };
 
   return (
     <div className="content-sheets">
@@ -68,6 +129,7 @@ const MonthlySheet = ({ monthlySheetData }) => {
                       type="text"
                       name="netIncome"
                       id="netIncome"
+                      readOnly
                       value={monthlySheetData.netIncome}
                     />
                   </th>
@@ -79,6 +141,7 @@ const MonthlySheet = ({ monthlySheetData }) => {
                       type="text"
                       name="overspentLastMonth"
                       id="overspentLastMonth"
+                      readOnly
                       value={monthlySheetData.overspentLastMonth}
                     />
                   </td>
@@ -90,6 +153,7 @@ const MonthlySheet = ({ monthlySheetData }) => {
                       type="text"
                       name="netMinusOverspent"
                       id="netMinusOverspent"
+                      readOnly
                       value={
                         monthlySheetData.netIncome -
                         monthlySheetData.overspentLastMonth
@@ -238,14 +302,28 @@ const MonthlySheet = ({ monthlySheetData }) => {
                                 />
                               </td>
                               <td className="right-col">
-                                <ClassicInput
-                                  type="text"
-                                  placeholder="Amount"
-                                  data-type="categories-amount"
-                                  name="categories-amount"
-                                  value={key[1]}
-                                  readOnly
-                                />
+                                <div className="pseudo-input">
+                                  {key[1]}{' '}
+                                  {spendingTotals[key[0]] ? (
+                                    <span className="spent">
+                                      - spent {spendingTotals[key[0]]}
+                                    </span>
+                                  ) : (
+                                    ''
+                                  )}
+                                </div>
+                                {/*<ClassicInput*/}
+                                {/*  type="text"*/}
+                                {/*  placeholder="Amount"*/}
+                                {/*  data-type="categories-amount"*/}
+                                {/*  name="categories-amount"*/}
+                                {/*  value={`${*/}
+                                {/*    key[1]*/}
+                                {/*  } - <span className="spent">spent ${*/}
+                                {/*    spendingTotals[key[0]]*/}
+                                {/*  }</span>`}*/}
+                                {/*  readOnly*/}
+                                {/*/>*/}
                               </td>
                             </tr>
                           );
@@ -255,6 +333,57 @@ const MonthlySheet = ({ monthlySheetData }) => {
                 </tbody>
               </table>
             </div>
+          </Col>
+        </Row>
+        <Row>
+          <Col xs={12} md={12} className="spendings">
+            <div className="title-div">
+              <h2>Spendings</h2>
+              <div className="input-group">
+                <ClassicInput
+                  handleChange={(e) => handleChangeSpending(e)}
+                  placeholder="Category"
+                  type="select"
+                  id="category"
+                  name="category"
+                  value={spendingData.category}
+                  data={categoriesList ? categoriesList : ''}
+                />
+                <ClassicInput
+                  handleChange={(e) => handleChangeSpending(e)}
+                  placeholder="Amount"
+                  type="text"
+                  id="amount"
+                  name="amount"
+                  value={spendingData.amount}
+                />
+                <ClassicButton handleClick={handleAddSpending}>
+                  Add
+                </ClassicButton>
+              </div>
+            </div>
+            <Row>
+              <Table striped bordered hover>
+                <thead>
+                  <tr>
+                    <th>Category</th>
+                    <th>Amount</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {monthlySheetData.spendings[0]
+                    ? monthlySheetData.spendings.map((spending, key) => {
+                        return (
+                          <tr key={key}>
+                            <td>{Object.keys(spending)}</td>
+                            <td>{Object.values(spending)}</td>
+                          </tr>
+                        );
+                      })
+                    : null}
+                </tbody>
+              </Table>
+            </Row>
           </Col>
         </Row>
       </div>

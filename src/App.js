@@ -10,14 +10,12 @@ import ResourcesPage from './pages/resources-page/resources-page.component';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import DataUse from './pages/data-use-page/data-use-page.component';
+import LandingPage from './pages/landing-page/landing-page.component';
 
 function App() {
   return (
     <Router>
       <div className="app">
-        {/*<Route path="/">*/}
-        {/*  <LandingPage />*/}
-        {/*</Route>*/}
         <Route path="/:id">
           <Header />
         </Route>
@@ -26,6 +24,9 @@ function App() {
         </Route>
         <Switch>
           <Route exact path="/">
+            <LandingPage />
+          </Route>
+          <Route exact path="/create-budget-tracker">
             <SheetCreationPage />
           </Route>
           <Route exact path="/:id">

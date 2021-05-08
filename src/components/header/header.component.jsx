@@ -1,31 +1,61 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 
 import Navbar from 'react-bootstrap/Navbar';
 
 import './header.styles.scss';
+import { getUser } from '../../api/monthly-sheet.api';
 
 const Header = () => {
   const { id } = useParams();
+  const [currentUser, setCurrentUser] = useState({});
+
+  const idIsTracker = id !== undefined && id !== 'create-budget-tracker';
+
+  const fetchUser = async () => {
+    if (idIsTracker) {
+      const user = await getUser(id);
+
+      setCurrentUser(user);
+    }
+  };
+
+  useEffect(() => {
+    fetchUser();
+  }, []);
 
   return (
     <header>
       <Navbar expand="lg" variant="light" bg="light">
         <h1 className="site-title">
-          <Link to={`/${id}`}>
-            Quid <br /> <span>Watchers</span>
-          </Link>
+          {idIsTracker ? (
+            <Link to={`/${id}`}>
+              Quid <br /> <span>Watchers</span>
+            </Link>
+          ) : (
+            <Link to={`/`}>
+              Quid <br /> <span>Watchers</span>
+            </Link>
+          )}
         </h1>
-        <Navbar.Toggle aria-controls="responsive-navbar-nav" />
-        {id !== undefined ? (
+        <Navbar.Toggle
+          aria-controls={`${idIsTracker ? 'responsive-navbar-nav' : ''}`}
+        />
+        {idIsTracker ? (
           <Navbar.Collapse id="responsive-navbar-nav">
             <div className="items">
-              <Link className="nav-link" to={`/${id}/add-new`}>
-                Add monthly sheet
-              </Link>
-              <Link className="nav-link" to={`/${id}`}>
-                Your monthly sheets
-              </Link>
+              {currentUser.hasAlreadyTutoed ? (
+                <>
+                  <Link className="nav-link" to={`/${id}/add-new`}>
+                    Add monthly sheet
+                  </Link>
+                  <Link className="nav-link" to={`/${id}`}>
+                    Your monthly sheets
+                  </Link>
+                </>
+              ) : (
+                ''
+              )}
               <Link className="nav-link" to={`/${id}/resources`}>
                 Resources
               </Link>

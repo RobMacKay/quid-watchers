@@ -18,11 +18,23 @@ const HomeContent = () => {
 
   const [allSheets, setAllSheets] = useState([]);
   const [monthlySheet, setMonthlySheet] = useState({});
+  const [isFetching, setIsFetching] = useState(false);
 
   const feedMonthlySheets = async () => {
+    console.log('feedMonthlySheets');
     const allMonthlySheets = await getAllMonthlySheets(id);
 
     setAllSheets(allMonthlySheets);
+
+    const currentActive = document.querySelectorAll('.item-slider.active');
+
+    const selectedMonthlySheet = allSheets.find((sheet) => {
+      return sheet.month === currentActive[0].innerHTML;
+    });
+
+    if (selectedMonthlySheet) {
+      setMonthlySheet(selectedMonthlySheet);
+    }
   };
 
   const handleSelectMonth = async (event) => {
@@ -48,7 +60,7 @@ const HomeContent = () => {
 
   useEffect(() => {
     feedMonthlySheets();
-  }, []);
+  }, [isFetching]);
 
   return (
     <div className="home-content">
@@ -71,7 +83,11 @@ const HomeContent = () => {
         </nav>
         {!_.isEmpty(monthlySheet) ? (
           <>
-            <MonthlySheet monthlySheetData={monthlySheet} />
+            <MonthlySheet
+              monthlySheetData={monthlySheet}
+              setIsFetching={setIsFetching}
+              isFetching={isFetching}
+            />
           </>
         ) : document.querySelectorAll('.item-slider.active').length === 0 ? (
           <div className="select-a-month">

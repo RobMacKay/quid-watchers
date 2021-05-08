@@ -1,7 +1,8 @@
 .classic-input {
   margin-bottom: 20px;
 
-  input[type='text'] {
+  input,
+  select{
     border: none;
     background-color: rgb(241, 241, 241);
     padding: 10px;
