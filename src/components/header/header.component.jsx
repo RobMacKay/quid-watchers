@@ -10,7 +10,11 @@ const Header = () => {
   const { id } = useParams();
   const [currentUser, setCurrentUser] = useState({});
 
-  const idIsTracker = id !== undefined && id !== 'create-budget-tracker';
+  const idIsTracker =
+    id !== undefined &&
+    id !== 'create-budget-tracker' &&
+    id !== 'data' &&
+    id !== 'contact';
 
   const fetchUser = async () => {
     if (idIsTracker) {
@@ -65,7 +69,16 @@ const Header = () => {
             </div>
           </Navbar.Collapse>
         ) : (
-          ''
+          <Navbar.Collapse id="responsive-navbar-nav">
+            <div className="items">
+              <Link className="nav-link" to={`/data`}>
+                Your Data
+              </Link>
+              <Link className="nav-link" to={`/contact`}>
+                Contact
+              </Link>
+            </div>
+          </Navbar.Collapse>
         )}
       </Navbar>
     </header>

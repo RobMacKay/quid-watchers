@@ -11,6 +11,7 @@ import ResourcesPage from './pages/resources-page/resources-page.component';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import DataUse from './pages/data-use-page/data-use-page.component';
 import LandingPage from './pages/landing-page/landing-page.component';
+import ContactPage from './pages/contact-page/contact-page.component';
 
 function App() {
   return (
@@ -23,6 +24,12 @@ function App() {
           <Header />
         </Route>
         <Switch>
+          <Route exact path="/data">
+            <DataUse />
+          </Route>
+          <Route exact path="/contact">
+            <ContactPage />
+          </Route>
           <Route exact path="/">
             <LandingPage />
           </Route>

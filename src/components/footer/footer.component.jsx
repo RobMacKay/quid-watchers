@@ -1,7 +1,7 @@
 import React from 'react';
 
 import './footer.styles.scss';
-import { Link, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 
 const Footer = () => {
   const { id } = useParams();
@@ -9,7 +9,7 @@ const Footer = () => {
   return (
     <footer>
       <p>
-        Mael Landrin <br /> MonkeyFeeder <br /> Because I fed monkeys once
+        MonkeyFeeder <br /> Because I fed monkeys once
       </p>
     </footer>
   );

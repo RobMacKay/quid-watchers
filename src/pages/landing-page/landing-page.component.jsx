@@ -6,7 +6,7 @@ import Privacy from '../../assets/privacy.svg';
 import Quick from '../../assets/quick.svg';
 
 import './landing-page.styles.scss';
-import { Button, Jumbotron } from 'react-bootstrap';
+import { Jumbotron } from 'react-bootstrap';
 import Container from 'react-bootstrap/Container';
 import { Link } from 'react-router-dom';
 import ClassicButton from '../../components/classic-button/classic-button.component';
