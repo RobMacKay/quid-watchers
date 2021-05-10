@@ -8,7 +8,7 @@
 
 ### Core Technical Concepts/Inspiration
 
-- The idea around the unique URL to access your content is from one of those "Everytime you build a Todo list, a puppy dies" kind of article. One of project was ironically a Todo list with a unique URL for each list. The idea was great, so I "stole" it, so the app is de facto crossplatform, sometimes I like working out at home, so I can use the app on my MacBook, or when I'm at the gym, I can use my phone. 
+- The idea around the unique URL to access your content is from one of those "Everytime you build a Todo list, a puppy dies" kind of article. One of project was ironically a Todo list with a unique URL for each list. 
 - I like charts, I want to budget, and my main motivation is seeing my debts go down, and my savings go up.
 - It's the 2nd project on which I focus on the design. It is meant to be used on a desktop computer, not on a smartphone. I'll make it responsive, but for now it's mostly optimized for dekstops.
 
